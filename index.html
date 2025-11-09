@@ -335,6 +335,10 @@
             box-shadow: var(--card-shadow);
             transition: var(--transition);
             aspect-ratio: 9/16;
+            background: linear-gradient(135deg, var(--primary-color), #45A049);
+            display: flex;
+            flex-direction: column;
+            position: relative;
         }
 
         .screenshot:hover {
@@ -346,6 +350,17 @@
             height: 100%;
             object-fit: cover;
             display: block;
+        }
+
+        .screenshot-placeholder {
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.95);
+            text-align: center;
+            font-weight: bold;
+            color: black;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            font-size: 1.1rem;
+            line-height: 1.4;
         }
 
         /* How It Works */
@@ -794,16 +809,20 @@
             </div>
             <div class="screenshots-container">
                 <div class="screenshot loading">
-                    <img src="https://via.placeholder.com/280x500/4CAF50/FFFFFF?text=Tela+Principal" alt="Tela Principal do Aplicativo">
+                    <div class="screenshot-placeholder">Tela Principal</div>
+                    <img src="TELA_PRINCIPAL.png" alt="Tela Principal do Aplicativo">
                 </div>
                 <div class="screenshot loading">
-                    <img src="https://via.placeholder.com/280x500/2196F3/FFFFFF?text=Produtividade" alt="Cálculo de Produtividade">
+                    <div class="screenshot-placeholder">Cálculo de Produtividade</div>
+                    <img src="TELA_COLHEITA.png" alt="Cálculo de Produtividade">
                 </div>
                 <div class="screenshot loading">
-                    <img src="https://via.placeholder.com/280x500/FFC107/333333?text=Análise+Perdas" alt="Análise de Perdas">
+                    <div class="screenshot-placeholder">Análise de Perdas</div>
+                    <img src="Captura de tela 2025-11-07 153506.png" alt="Análise de Perdas">
                 </div>
                 <div class="screenshot loading">
-                    <img src="https://via.placeholder.com/280x500/4CAF50/FFFFFF?text=Relatórios" alt="Relatórios PDF">
+                    <div class="screenshot-placeholder">Relatórios PDF</div>
+                    <img src="Captura de tela 2025-11-07 153434.png" alt="Relatórios PDF">
                 </div>
             </div>
         </div>
@@ -1014,6 +1033,13 @@
             btn.addEventListener('click', function() {
                 // Aqui você pode adicionar tracking do Google Analytics
                 console.log('Download button clicked - redirecting to Google Play');
+            });
+        });
+
+        // Image loading fallback
+        document.querySelectorAll('.screenshot img').forEach(img => {
+            img.addEventListener('error', function() {
+                this.style.display = 'none';
             });
         });
     </script>
