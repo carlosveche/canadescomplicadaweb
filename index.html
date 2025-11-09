@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cana Descomplicada - Aplicativo para Gestão de Colheita</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #FFC107;
+            --background-color: #F5F5F5;
+            --text-color: #333333;
+            --back-color: #757575;
+            --white: #FFFFFF;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), #45A049);
+            color: var(--white);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: clamp(1.2rem, 4vw, 1.5rem);
+            font-weight: 700;
+        }
+
+        .logo i {
+            font-size: clamp(1.5rem, 4vw, 1.8rem);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            font-size: clamp(0.9rem, 2vw, 1rem);
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        .mobile-menu {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: var(--white);
+        }
+
+        /* Mobile Menu */
+        .mobile-nav {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            background: #45A049;
+            padding: 1rem;
+            transform: translateY(-100%);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 999;
+        }
+
+        .mobile-nav.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .mobile-nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .mobile-nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.8rem 1rem;
+            border-radius: 6px;
+            transition: var(--transition);
+            font-size: 1.1rem;
+        }
+
+        .mobile-nav-links a:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: clamp(120px, 15vw, 160px) 0 clamp(60px, 10vw, 80px);
+            background: linear-gradient(135deg, var(--primary-color), #45A049);
+            color: var(--white);
+            text-align: center;
+            margin-top: 70px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 8vw, 3rem);
+            margin-bottom: 1rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: clamp(10px, 3vw, 12px) clamp(20px, 4vw, 28px);
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+            font-size: clamp(0.9rem, 2vw, 1rem);
+            text-align: center;
+            min-height: 50px;
+        }
+
+        .btn-primary {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            background-color: #FFB300;
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--white);
+            border: 2px solid var(--white);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Video Section */
+        .video-section {
+            padding: clamp(60px, 10vw, 80px) 0;
+            background: var(--white);
+        }
+
+        .video-container {
+            max-width: 800px;
+            margin: 0 auto;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Features Section */
+        .features {
+            padding: clamp(60px, 10vw, 80px) 0;
+            background-color: var(--white);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: clamp(2rem, 6vw, 3rem);
+        }
+
+        .section-title h2 {
+            font-size: clamp(1.8rem, 6vw, 2.5rem);
+            color: var(--text-color);
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .section-title p {
+            font-size: clamp(1rem, 2.5vw, 1.1rem);
+            color: var(--back-color);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+            gap: clamp(1.5rem, 4vw, 2rem);
+        }
+
+        .feature-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: clamp(1.5rem, 4vw, 2rem);
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            text-align: center;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-icon {
+            width: clamp(60px, 10vw, 70px);
+            height: clamp(60px, 10vw, 70px);
+            background: rgba(76, 175, 80, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto clamp(1rem, 3vw, 1.5rem);
+        }
+
+        .feature-icon i {
+            font-size: clamp(1.5rem, 4vw, 1.8rem);
+            color: var(--primary-color);
+        }
+
+        .feature-card h3 {
+            font-size: clamp(1.2rem, 3vw, 1.4rem);
+            margin-bottom: 1rem;
+            color: var(--text-color);
+            line-height: 1.3;
+        }
+
+        .feature-card p {
+            color: var(--back-color);
+            line-height: 1.6;
+            flex-grow: 1;
+        }
+
+        /* Screenshots Section */
+        .screenshots {
+            padding: clamp(60px, 10vw, 80px) 0;
+            background-color: var(--background-color);
+        }
+
+        .screenshots-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+            gap: clamp(1rem, 3vw, 2rem);
+            padding: 1rem 0;
+        }
+
+        .screenshot {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            aspect-ratio: 9/16;
+        }
+
+        .screenshot:hover {
+            transform: scale(1.03);
+        }
+
+        .screenshot img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: clamp(60px, 10vw, 80px) 0;
+            background-color: var(--white);
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
+            gap: clamp(1.5rem, 4vw, 2rem);
+        }
+
+        .step {
+            text-align: center;
+            padding: clamp(1.5rem, 4vw, 2rem) clamp(1rem, 3vw, 1rem);
+        }
+
+        .step-number {
+            width: clamp(45px, 8vw, 50px);
+            height: clamp(45px, 8vw, 50px);
+            background: var(--primary-color);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            font-weight: 700;
+            margin: 0 auto clamp(1rem, 3vw, 1.5rem);
+        }
+
+        .step h3 {
+            margin-bottom: 1rem;
+            color: var(--text-color);
+            font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+            line-height: 1.3;
+        }
+
+        .step p {
+            color: var(--back-color);
+            line-height: 1.6;
+        }
+
+        /* Download Section */
+        .download {
+            padding: clamp(60px, 10vw, 80px) 0;
+            background: linear-gradient(135deg, var(--primary-color), #45A049);
+            color: var(--white);
+            text-align: center;
+        }
+
+        .download h2 {
+            font-size: clamp(1.8rem, 6vw, 2.5rem);
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .download p {
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .download-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .download-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--secondary-color);
+            color: var(--text-color);
+            padding: clamp(10px, 3vw, 12px) clamp(15px, 3vw, 24px);
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            min-width: min(200px, 100%);
+            justify-content: center;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            background: #FFB300;
+        }
+
+        .download-btn i {
+            font-size: clamp(1.3rem, 3vw, 1.5rem);
+        }
+
+        .download-btn-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .download-btn-text div:first-child {
+            font-size: clamp(0.7rem, 2vw, 0.8rem);
+        }
+
+        .download-btn-text div:last-child {
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--text-color);
+            color: var(--white);
+            padding: clamp(40px, 8vw, 60px) 0 20px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
+            gap: clamp(1.5rem, 4vw, 2rem);
+            margin-bottom: 2rem;
+        }
+
+        .footer-column h3 {
+            margin-bottom: 1.5rem;
+            font-size: clamp(1.1rem, 2.5vw, 1.2rem);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: clamp(0.9rem, 2vw, 1rem);
+        }
+
+        .footer-links a:hover {
+            color: var(--secondary-color);
+        }
+
+        .footer-links i {
+            margin-right: 8px;
+            width: 16px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: clamp(35px, 8vw, 40px);
+            height: clamp(35px, 8vw, 40px);
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: var(--white);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background: var(--secondary-color);
+            transform: translateY(-3px);
+            color: var(--text-color);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+        }
+
+        /* Loading Animation */
+        .loading {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .loading.loaded {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: var(--primary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: var(--transition);
+            opacity: 0;
+            visibility: hidden;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background: #45A049;
+            transform: translateY(-3px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: min(300px, 100%);
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+            }
+
+            .download-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .download-btn {
+                width: min(300px, 100%);
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            .hero {
+                padding: 100px 0 40px;
+            }
+
+            .features,
+            .screenshots,
+            .how-it-works,
+            .download,
+            .video-section {
+                padding: 40px 0;
+            }
+
+            .feature-card,
+            .step {
+                padding: 1.5rem 1rem;
+            }
+
+            .back-to-top {
+                width: 45px;
+                height: 45px;
+                bottom: 15px;
+                right: 15px;
+            }
+        }
+
+        /* Landscape orientation for mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .hero {
+                padding: 100px 0 40px;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <i class="fas fa-leaf"></i>
+                    <span>Cana Descomplicada</span>
+                </div>
+                <div class="nav-links">
+                    <a href="#video">Vídeo</a>
+                    <a href="#features">Funcionalidades</a>
+                    <a href="#screenshots">Capturas</a>
+                    <a href="#how-it-works">Como Funciona</a>
+                    <a href="#download">Download</a>
+                </div>
+                <button class="mobile-menu" aria-label="Abrir menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav">
+        <div class="container">
+            <div class="mobile-nav-links">
+                <a href="#video">Vídeo</a>
+                <a href="#features">Funcionalidades</a>
+                <a href="#screenshots">Capturas</a>
+                <a href="#how-it-works">Como Funciona</a>
+                <a href="#download">Download</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1 class="loading">Gestão Inteligente da Colheita de Cana</h1>
+            <p class="loading">O aplicativo que simplifica o cálculo de produtividade, perdas e eficiência na colheita mecanizada de cana-de-açúcar.</p>
+            <div class="hero-buttons">
+                <a href="#download" class="btn btn-primary loading">Baixar Agora</a>
+                <a href="#video" class="btn btn-secondary loading">Ver Vídeo</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Section -->
+    <section id="video" class="video-section">
+        <div class="container">
+            <div class="section-title">
+                <h2 class="loading">Conheça o Aplicativo</h2>
+                <p class="loading">Assista ao vídeo de apresentação e veja como o Cana Descomplicada pode transformar sua operação</p>
+            </div>
+            <div class="video-container loading">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/IzzKpyvA5L0" 
+                            title="Apresentação do Aplicativo Cana Descomplicada" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-title">
+                <h2 class="loading">Funcionalidades Principais</h2>
+                <p class="loading">Ferramentas especializadas para otimizar sua operação de colheita</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card loading">
+                    <div class="feature-icon">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <h3>Cálculo de Produtividade</h3>
+                    <p>Calcule a produtividade por colhedora com base em tempos de transbordo e densidade de carga.</p>
+                </div>
+                <div class="feature-card loading">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Análise de Perdas</h3>
+                    <p>Identifique e classifique perdas na colheita com sugestões de correção específicas.</p>
+                </div>
+                <div class="feature-card loading">
+                    <div class="feature-icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <h3>Eficiência Operacional</h3>
+                    <p>Avalie o avanço do trator e a relação de patinagem para máxima eficiência.</p>
+                </div>
+                <div class="feature-card loading">
+                    <div class="feature-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <h3>Relatórios em PDF</h3>
+                    <p>Gere relatórios detalhados em PDF para análise e compartilhamento.</p>
+                </div>
+                <div class="feature-card loading">
+                    <div class="feature-icon">
+                        <i class="fas fa-language"></i>
+                    </div>
+                    <h3>Multi-idioma</h3>
+                    <p>Disponível em Português, Inglês e Espanhol para operações internacionais.</p>
+                </div>
+                <div class="feature-card loading">
+                    <div class="feature-icon">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <h3>Temas Personalizáveis</h3>
+                    <p>Interface com temas claro e escuro para melhor experiência visual.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Screenshots Section -->
+    <section id="screenshots" class="screenshots">
+        <div class="container">
+            <div class="section-title">
+                <h2 class="loading">Capturas do Aplicativo</h2>
+                <p class="loading">Conheça a interface intuitiva e moderna do Cana Descomplicada</p>
+            </div>
+            <div class="screenshots-container">
+                <div class="screenshot loading">
+                    <img src="https://via.placeholder.com/280x500/4CAF50/FFFFFF?text=Tela+Principal" alt="Tela Principal do Aplicativo">
+                </div>
+                <div class="screenshot loading">
+                    <img src="https://via.placeholder.com/280x500/2196F3/FFFFFF?text=Produtividade" alt="Cálculo de Produtividade">
+                </div>
+                <div class="screenshot loading">
+                    <img src="https://via.placeholder.com/280x500/FFC107/333333?text=Análise+Perdas" alt="Análise de Perdas">
+                </div>
+                <div class="screenshot loading">
+                    <img src="https://via.placeholder.com/280x500/4CAF50/FFFFFF?text=Relatórios" alt="Relatórios PDF">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <div class="section-title">
+                <h2 class="loading">Como Funciona</h2>
+                <p class="loading">Quatro passos simples para otimizar sua colheita</p>
+            </div>
+            <div class="steps">
+                <div class="step loading">
+                    <div class="step-number">1</div>
+                    <h3>Coleta de Dados</h3>
+                    <p>Insira os dados operacionais como tempos de transbordo, TCH e área amostrada.</p>
+                </div>
+                <div class="step loading">
+                    <div class="step-number">2</div>
+                    <h3>Análise Automática</h3>
+                    <p>O aplicativo processa os dados e calcula automaticamente a produtividade e perdas.</p>
+                </div>
+                <div class="step loading">
+                    <div class="step-number">3</div>
+                    <h3>Identificação de Problemas</h3>
+                    <p>Receba alertas quando as perdas estiverem acima da meta estabelecida.</p>
+                </div>
+                <div class="step loading">
+                    <div class="step-number">4</div>
+                    <h3>Soluções Específicas</h3>
+                    <p>Obtenha sugestões de correção baseadas no tipo de perda identificada.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Download Section -->
+    <section id="download" class="download">
+        <div class="container">
+            <h2 class="loading">Baixe o Aplicativo</h2>
+            <p class="loading">Disponível para dispositivos Android. Otimize sua colheita agora mesmo!</p>
+            <div class="download-buttons">
+                <a href="https://play.google.com/store/apps/details?id=com.cana.descomplicada.canadescomplicada.appv2" 
+                   class="download-btn loading" target="_blank" rel="noopener">
+                    <i class="fab fa-google-play"></i>
+                    <div class="download-btn-text">
+                        <div>Disponível no</div>
+                        <div>Google Play</div>
+                    </div>
+                </a>
+                <a href="https://play.google.com/store/apps/details?id=com.cana.descomplicada.canadescomplicada.appv2" 
+                   class="download-btn loading" target="_blank" rel="noopener">
+                    <i class="fas fa-download"></i>
+                    <div class="download-btn-text">
+                        <div>Baixar via</div>
+                        <div>Google Play</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column loading">
+                    <h3>Cana Descomplicada</h3>
+                    <p>O aplicativo definitivo para gestão inteligente da colheita de cana-de-açúcar.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column loading">
+                    <h3>Links Rápidos</h3>
+                    <ul class="footer-links">
+                        <li><a href="#video">Vídeo</a></li>
+                        <li><a href="#features">Funcionalidades</a></li>
+                        <li><a href="#screenshots">Capturas</a></li>
+                        <li><a href="#how-it-works">Como Funciona</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column loading">
+                    <h3>Suporte</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Central de Ajuda</a></li>
+                        <li><a href="#">Tutoriais</a></li>
+                        <li><a href="#">Política de Privacidade</a></li>
+                        <li><a href="#">Termos de Uso</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column loading">
+                    <h3>Contato</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-envelope"></i> contato@canadescomplicada.com</li>
+                        <li><i class="fas fa-phone"></i> +55 (11) 99999-9999</li>
+                        <li><i class="fas fa-map-marker-alt"></i> São Paulo, Brasil</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Cana Descomplicada. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" aria-label="Voltar ao topo">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <script>
+        // Mobile menu functionality
+        const mobileMenu = document.querySelector('.mobile-menu');
+        const mobileNav = document.querySelector('.mobile-nav');
+
+        mobileMenu.addEventListener('click', () => {
+            mobileNav.classList.toggle('active');
+            mobileMenu.innerHTML = mobileNav.classList.contains('active') 
+                ? '<i class="fas fa-times"></i>' 
+                : '<i class="fas fa-bars"></i>';
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.mobile-nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileNav.classList.remove('active');
+                mobileMenu.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Back to top button
+        const backToTopButton = document.querySelector('.back-to-top');
+
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.add('visible');
+            } else {
+                backToTopButton.classList.remove('visible');
+            }
+        });
+
+        backToTopButton.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Loading animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('loaded');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all elements with loading class
+        document.querySelectorAll('.loading').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Initial load animation
+        window.addEventListener('load', () => {
+            document.querySelectorAll('.loading').forEach(el => {
+                if (el.getBoundingClientRect().top < window.innerHeight) {
+                    el.classList.add('loaded');
+                }
+            });
+        });
+
+        // Touch device detection
+        function isTouchDevice() {
+            return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        }
+
+        // Add touch class to body for CSS adjustments
+        if (isTouchDevice()) {
+            document.body.classList.add('touch-device');
+        }
+
+        // Google Analytics tracking for downloads
+        document.querySelectorAll('.download-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Aqui você pode adicionar tracking do Google Analytics
+                console.log('Download button clicked - redirecting to Google Play');
+            });
+        });
+    </script>
+</body>
+</html>
