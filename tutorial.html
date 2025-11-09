@@ -122,6 +122,12 @@
             }
         }
 
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
         /* Header com animação */
         header {
             background: linear-gradient(135deg, var(--primary-color), #45A049);
@@ -418,6 +424,50 @@
             font-weight: 600;
         }
 
+        .video-level {
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* Filtro de Categorias */
+        .filter-section {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            background: var(--white);
+            border: 2px solid var(--primary-color);
+            border-radius: 25px;
+            color: var(--primary-color);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--primary-color);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
         /* Progress Bar */
         .progress-bar {
             position: fixed;
@@ -606,6 +656,14 @@
             transform: translateY(0);
         }
 
+        /* Mensagem de Carregamento */
+        .loading-message {
+            text-align: center;
+            padding: 2rem;
+            color: var(--back-color);
+            font-style: italic;
+        }
+
         @media (max-width: 768px) {
             .nav-links {
                 display: none;
@@ -633,6 +691,15 @@
 
             .section-title h2 {
                 font-size: 2rem;
+            }
+
+            .filter-buttons {
+                gap: 0.5rem;
+            }
+
+            .filter-btn {
+                padding: 6px 12px;
+                font-size: 0.9rem;
             }
         }
 
@@ -708,9 +775,21 @@
                 <h2>Vídeos Tutoriais</h2>
                 <p>Assista aos tutoriais e domine o aplicativo</p>
             </div>
+
+            <!-- Filtro de Categorias -->
+            <div class="filter-section animate-on-scroll">
+                <h3>Filtrar por categoria:</h3>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">Todos</button>
+                    <button class="filter-btn" data-filter="iniciante">Iniciante</button>
+                    <button class="filter-btn" data-filter="intermediario">Intermediário</button>
+                    <button class="filter-btn" data-filter="avancado">Avançado</button>
+                </div>
+            </div>
             
-            <div class="videos-grid">
-                <div class="video-card animate-on-scroll">
+            <div class="videos-grid" id="videosContainer">
+                <!-- Tutorial 1 -->
+                <div class="video-card animate-on-scroll" data-category="iniciante">
                     <div class="video-container">
                         <iframe src="https://www.youtube.com/embed/IzzKpyvA5L0" 
                                 title="Tutorial 1: Introdução ao Aplicativo" 
@@ -720,12 +799,14 @@
                     </div>
                     <div class="video-info">
                         <div class="video-duration">5:30</div>
+                        <div class="video-level">Iniciante</div>
                         <h3>Introdução ao Aplicativo</h3>
                         <p>Aprenda as funcionalidades básicas e interface do Cana Descomplicada</p>
                     </div>
                 </div>
 
-                <div class="video-card animate-on-scroll">
+                <!-- Tutorial 2 -->
+                <div class="video-card animate-on-scroll" data-category="iniciante">
                     <div class="video-container">
                         <iframe src="https://www.youtube.com/embed/VIDEO_ID_2" 
                                 title="Tutorial 2: Cálculo de Produtividade" 
@@ -735,12 +816,14 @@
                     </div>
                     <div class="video-info">
                         <div class="video-duration">7:15</div>
+                        <div class="video-level">Iniciante</div>
                         <h3>Cálculo de Produtividade</h3>
                         <p>Como calcular a produtividade por colhedora passo a passo</p>
                     </div>
                 </div>
 
-                <div class="video-card animate-on-scroll">
+                <!-- Tutorial 3 -->
+                <div class="video-card animate-on-scroll" data-category="intermediario">
                     <div class="video-container">
                         <iframe src="https://www.youtube.com/embed/VIDEO_ID_3" 
                                 title="Tutorial 3: Análise de Perdas" 
@@ -750,12 +833,14 @@
                     </div>
                     <div class="video-info">
                         <div class="video-duration">6:45</div>
+                        <div class="video-level">Intermediário</div>
                         <h3>Análise de Perdas</h3>
                         <p>Identifique e classifique perdas na colheita com o aplicativo</p>
                     </div>
                 </div>
 
-                <div class="video-card animate-on-scroll">
+                <!-- Tutorial 4 -->
+                <div class="video-card animate-on-scroll" data-category="intermediario">
                     <div class="video-container">
                         <iframe src="https://www.youtube.com/embed/VIDEO_ID_4" 
                                 title="Tutorial 4: Geração de Relatórios" 
@@ -765,12 +850,14 @@
                     </div>
                     <div class="video-info">
                         <div class="video-duration">8:20</div>
+                        <div class="video-level">Intermediário</div>
                         <h3>Geração de Relatórios PDF</h3>
                         <p>Aprenda a gerar e exportar relatórios detalhados em PDF</p>
                     </div>
                 </div>
 
-                <div class="video-card animate-on-scroll">
+                <!-- Tutorial 5 -->
+                <div class="video-card animate-on-scroll" data-category="avancado">
                     <div class="video-container">
                         <iframe src="https://www.youtube.com/embed/VIDEO_ID_5" 
                                 title="Tutorial 5: Configurações" 
@@ -780,12 +867,14 @@
                     </div>
                     <div class="video-info">
                         <div class="video-duration">4:50</div>
+                        <div class="video-level">Avançado</div>
                         <h3>Configurações e Personalização</h3>
                         <p>Personalize o aplicativo conforme suas necessidades</p>
                     </div>
                 </div>
 
-                <div class="video-card animate-on-scroll">
+                <!-- Tutorial 6 -->
+                <div class="video-card animate-on-scroll" data-category="avancado">
                     <div class="video-container">
                         <iframe src="https://www.youtube.com/embed/VIDEO_ID_6" 
                                 title="Tutorial 6: Dicas Avançadas" 
@@ -795,6 +884,7 @@
                     </div>
                     <div class="video-info">
                         <div class="video-duration">9:10</div>
+                        <div class="video-level">Avançado</div>
                         <h3>Dicas Avançadas</h3>
                         <p>Descubra funcionalidades avançadas para otimizar sua operação</p>
                     </div>
@@ -935,26 +1025,41 @@
             observer.observe(el);
         });
 
-        // Loading animations
-        const loadingObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('loaded');
-                }
-            });
-        }, { threshold: 0.1 });
+        // Sistema de Filtro
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const videoCards = document.querySelectorAll('.video-card');
 
-        document.querySelectorAll('.loading').forEach(el => {
-            loadingObserver.observe(el);
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                // Add active class to clicked button
+                button.classList.add('active');
+                
+                const filterValue = button.getAttribute('data-filter');
+                
+                videoCards.forEach(card => {
+                    if (filterValue === 'all' || card.getAttribute('data-category') === filterValue) {
+                        card.style.display = 'block';
+                        setTimeout(() => {
+                            card.style.opacity = '1';
+                            card.style.transform = 'translateY(0)';
+                        }, 100);
+                    } else {
+                        card.style.opacity = '0';
+                        card.style.transform = 'translateY(20px)';
+                        setTimeout(() => {
+                            card.style.display = 'none';
+                        }, 300);
+                    }
+                });
+            });
         });
 
-        // Initial load animation
-        window.addEventListener('load', () => {
-            document.querySelectorAll('.loading').forEach(el => {
-                if (el.getBoundingClientRect().top < window.innerHeight) {
-                    el.classList.add('loaded');
-                }
-            });
+        // YouTube video lazy loading
+        document.querySelectorAll('.video-container iframe').forEach(iframe => {
+            // Adicionar loading lazy para melhor performance
+            iframe.setAttribute('loading', 'lazy');
         });
 
         // Touch device detection
@@ -967,10 +1072,18 @@
             document.body.classList.add('touch-device');
         }
 
-        // YouTube video lazy loading
-        document.querySelectorAll('.video-container iframe').forEach(iframe => {
-            // Adicionar loading lazy para melhor performance
-            iframe.setAttribute('loading', 'lazy');
+        // Efeito de digitação no título (opcional)
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Página de tutoriais carregada com sucesso!');
+            
+            // Adicionar efeito de pulso periódico nos cards
+            setInterval(() => {
+                const randomCard = videoCards[Math.floor(Math.random() * videoCards.length)];
+                randomCard.style.animation = 'pulse 2s ease-in-out';
+                setTimeout(() => {
+                    randomCard.style.animation = '';
+                }, 2000);
+            }, 5000);
         });
     </script>
 </body>
