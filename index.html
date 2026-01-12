@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cana Descomplicada - Aplicativo para Gestão de Colheita</title>
+    
+    <!-- Google Analytics -->
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-45CK09FHWC"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-45CK09FHWC');
+    </script>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -1423,6 +1434,36 @@
     </button>
 
     <script>
+        // Funções de rastreamento do Google Analytics
+        function trackButtonClick(buttonText, category = 'Engagement') {
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'button_click', {
+                    'event_category': category,
+                    'event_label': buttonText,
+                    'value': 1
+                });
+            }
+        }
+
+        function trackPageView(section) {
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'page_view', {
+                    'page_title': section,
+                    'page_location': window.location.href + '#' + section
+                });
+            }
+        }
+
+        function trackChatbotInteraction(action, messageLength = 0) {
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'chatbot_' + action, {
+                    'event_category': 'Chatbot',
+                    'event_label': action,
+                    'value': messageLength
+                });
+            }
+        }
+
         // Chatbot Functionality
         class Chatbot {
             constructor() {
@@ -1443,8 +1484,14 @@
             }
 
             setupEventListeners() {
-                this.toggleBtn.addEventListener('click', () => this.toggle());
-                this.closeBtn.addEventListener('click', () => this.close());
+                this.toggleBtn.addEventListener('click', () => {
+                    this.toggle();
+                    trackChatbotInteraction('toggle');
+                });
+                this.closeBtn.addEventListener('click', () => {
+                    this.close();
+                    trackChatbotInteraction('close');
+                });
                 this.sendBtn.addEventListener('click', () => this.sendMessage());
                 this.input.addEventListener('keypress', (e) => {
                     if (e.key === 'Enter') this.sendMessage();
@@ -1554,6 +1601,9 @@
                 this.input.value = '';
                 this.sendBtn.disabled = true;
 
+                // Rastrear mensagem do usuário
+                trackChatbotInteraction('user_message', message.length);
+
                 this.showTypingIndicator();
 
                 // Simulate API call delay
@@ -1561,6 +1611,9 @@
                     this.hideTypingIndicator();
                     this.processUserMessage(message);
                     this.sendBtn.disabled = false;
+                    
+                    // Rastrear resposta do bot
+                    trackChatbotInteraction('bot_response');
                 }, 1000 + Math.random() * 1000);
             }
 
@@ -1606,7 +1659,10 @@
                 this.applyTheme(this.currentTheme);
                 
                 // Add event listener
-                this.themeToggle.addEventListener('click', () => this.toggleTheme());
+                this.themeToggle.addEventListener('click', () => {
+                    this.toggleTheme();
+                    trackButtonClick('theme_toggle', 'Preferences');
+                });
                 
                 // Listen for system preference changes
                 this.watchSystemPreference();
@@ -1665,6 +1721,8 @@
             mobileMenu.innerHTML = mobileNav.classList.contains('active') 
                 ? '<i class="fas fa-times"></i>' 
                 : '<i class="fas fa-bars"></i>';
+            
+            trackButtonClick('mobile_menu', 'Navigation');
         });
 
         // Close mobile menu when clicking on a link
@@ -1672,6 +1730,10 @@
             link.addEventListener('click', () => {
                 mobileNav.classList.remove('active');
                 mobileMenu.innerHTML = '<i class="fas fa-bars"></i>';
+                
+                // Rastrear clique no menu móvel
+                const linkText = link.textContent || link.getAttribute('href');
+                trackButtonClick('mobile_nav_' + linkText, 'Navigation');
             });
         });
 
@@ -1685,8 +1747,32 @@
                         behavior: 'smooth',
                         block: 'start'
                     });
+                    
+                    // Rastrear clique em link de navegação
+                    const linkText = this.textContent || this.getAttribute('href');
+                    trackButtonClick('nav_' + linkText, 'Navigation');
                 }
             });
+        });
+
+        // Rastrear visualização de seções
+        const sections = document.querySelectorAll('section[id]');
+        const observerOptions = {
+            threshold: 0.3,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const sectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const sectionId = entry.target.id;
+                    trackPageView(sectionId);
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => {
+            sectionObserver.observe(section);
         });
 
         // Back to top button
@@ -1705,10 +1791,11 @@
                 top: 0,
                 behavior: 'smooth'
             });
+            trackButtonClick('back_to_top', 'Navigation');
         });
 
         // Loading animations
-        const observerOptions = {
+        const observerOptions2 = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
         };
@@ -1719,7 +1806,7 @@
                     entry.target.classList.add('loaded');
                 }
             });
-        }, observerOptions);
+        }, observerOptions2);
 
         // Observe all elements with loading class
         document.querySelectorAll('.loading').forEach(el => {
@@ -1733,6 +1820,47 @@
                     el.classList.add('loaded');
                 }
             });
+            
+            // Rastrear tempo de carregamento da página
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'page_load', {
+                    'event_category': 'Performance',
+                    'event_label': 'Page Load Time',
+                    'value': performance.now()
+                });
+            }
+        });
+
+        // Rastrear cliques nos botões de download
+        document.querySelectorAll('.download-btn, .btn-primary, .btn-secondary').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                const buttonText = this.textContent.trim() || this.getAttribute('aria-label') || this.querySelector('i').className || 'Unknown Button';
+                
+                if (this.classList.contains('download-btn')) {
+                    trackButtonClick('download_button', 'Conversion');
+                    
+                    // Rastrear redirecionamento para Google Play
+                    setTimeout(() => {
+                        if (typeof gtag !== 'undefined') {
+                            gtag('event', 'redirect_to_play_store', {
+                                'event_category': 'Conversion',
+                                'event_label': 'Google Play',
+                                'value': 1
+                            });
+                        }
+                    }, 500);
+                } else {
+                    trackButtonClick(buttonText, 'Engagement');
+                }
+            });
+        });
+
+        // Rastrear cliques em links do footer
+        document.querySelectorAll('.footer-links a, .social-links a').forEach(link => {
+            link.addEventListener('click', function() {
+                const linkText = this.textContent || this.getAttribute('aria-label') || this.querySelector('i').className;
+                trackButtonClick('footer_' + linkText, 'Navigation');
+            });
         });
 
         // Touch device detection
@@ -1743,22 +1871,95 @@
         // Add touch class to body for CSS adjustments
         if (isTouchDevice()) {
             document.body.classList.add('touch-device');
+            
+            // Rastrear dispositivo touch
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'touch_device', {
+                    'event_category': 'Device',
+                    'event_label': 'Touch Device Detected',
+                    'value': 1
+                });
+            }
         }
-
-        // Google Analytics tracking for downloads
-        document.querySelectorAll('.download-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                // Aqui você pode adicionar tracking do Google Analytics
-                console.log('Download button clicked - redirecting to Google Play');
-            });
-        });
 
         // Image loading fallback
         document.querySelectorAll('.screenshot img').forEach(img => {
             img.addEventListener('error', function() {
                 this.style.display = 'none';
             });
+            
+            img.addEventListener('load', function() {
+                // Rastrear carregamento de imagem
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'image_load', {
+                        'event_category': 'Performance',
+                        'event_label': this.alt || 'Screenshot',
+                        'value': 1
+                    });
+                }
+            });
         });
+
+        // Rastrear tempo gasto na página
+        let pageStartTime = new Date();
+        window.addEventListener('beforeunload', function() {
+            let timeSpent = new Date() - pageStartTime;
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'time_spent', {
+                    'event_category': 'Engagement',
+                    'event_label': 'Page Time Spent',
+                    'value': Math.round(timeSpent / 1000) // segundos
+                });
+            }
+        });
+
+        // Rastrear rolagem da página
+        let scrollTracked25 = false;
+        let scrollTracked50 = false;
+        let scrollTracked75 = false;
+        let scrollTracked100 = false;
+
+        window.addEventListener('scroll', function() {
+            const scrollPosition = window.scrollY + window.innerHeight;
+            const pageHeight = document.documentElement.scrollHeight;
+            const scrollPercentage = (scrollPosition / pageHeight) * 100;
+
+            if (!scrollTracked25 && scrollPercentage >= 25) {
+                scrollTracked25 = true;
+                trackButtonClick('scroll_25', 'Engagement');
+            }
+            if (!scrollTracked50 && scrollPercentage >= 50) {
+                scrollTracked50 = true;
+                trackButtonClick('scroll_50', 'Engagement');
+            }
+            if (!scrollTracked75 && scrollPercentage >= 75) {
+                scrollTracked75 = true;
+                trackButtonClick('scroll_75', 'Engagement');
+            }
+            if (!scrollTracked100 && scrollPercentage >= 95) {
+                scrollTracked100 = true;
+                trackButtonClick('scroll_100', 'Engagement');
+            }
+        });
+
+        // Rastrear reprodução de vídeo
+        const videoIframe = document.querySelector('iframe');
+        if (videoIframe) {
+            // Usar postMessage para comunicação com iframe do YouTube
+            window.addEventListener('message', function(event) {
+                if (event.origin === 'https://www.youtube.com') {
+                    const data = JSON.parse(event.data);
+                    if (data.event === 'infoDelivery' && data.info) {
+                        if (data.info.currentTime > 0) {
+                            trackButtonClick('video_play', 'Video');
+                        }
+                        if (data.info.duration && data.info.currentTime > data.info.duration * 0.9) {
+                            trackButtonClick('video_complete', 'Video');
+                        }
+                    }
+                }
+            });
+        }
     </script>
 </body>
 </html>
